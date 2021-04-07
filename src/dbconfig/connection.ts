@@ -5,6 +5,7 @@ export const establishDbConnection = (): void => {
     mongoose.connect(process.env.DB_HOST, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
+      useCreateIndex: true,
     });
     const connection = mongoose.connection;
     connection.once('open', () => console.log('connected to mongodb'));
