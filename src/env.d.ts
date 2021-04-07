@@ -3,5 +3,7 @@ declare namespace NodeJS {
     DEBUG: string;
     PORT: string;
     DB_HOST: string;
+    EMAIL: string;
+    PASSWORD: string;
   }
 }
