@@ -5,5 +5,6 @@ declare namespace NodeJS {
     DB_HOST: string;
     EMAIL: string;
     PASSWORD: string;
+    SALT: string;
   }
 }
