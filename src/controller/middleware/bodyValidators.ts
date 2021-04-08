@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import createError from 'http-errors';
+import { User } from '../../dbconfig';
 
 export enum Validators {
   register = 'register',
@@ -18,9 +18,12 @@ export interface logBody {
 }
 
 export class BodyValidator {
-  static register = (req: Request, res: Response, next: NextFunction) => {
+  static register = async (req: Request, res: Response, next: NextFunction) => {
     const { firstName, lastName, email, password }: regBody = req.body;
-    if (firstName && lastName && email && password) {
+    const exists = await BodyValidator.checkIfUnique(email);
+    if (exists) {
+      res.status(402).json({ message: 'User already exists' });
+    } else if (firstName && lastName && email && password) {
       return next();
     } else {
       res.status(401).json({ message: 'Invalid request body' });
@@ -33,6 +36,15 @@ export class BodyValidator {
       return next();
     } else {
       res.status(401).json({ message: 'Invalid request body' });
+    }
+  };
+
+  private static checkIfUnique = async (email: string): Promise<boolean> => {
+    try {
+      const user = await User.countDocuments({ email });
+      return user >= 1;
+    } catch (e) {
+      return false;
     }
   };
 }
