@@ -4,12 +4,8 @@ import { User } from '../dbconfig/user.schema';
 import { validate } from './decorators/validate';
 import { regBody, logBody } from './middleware';
 import { encrypt } from './utils';
-const log = async (req: Request, res: Response, next: NextFunction) => {
-  const users = await User.find();
-  res.send(users);
-  return next();
-};
-
+import { cookieFor } from './utils/cookieconf';
+import { generateTokens } from './utils/authTokens';
 @withRouter
 class Controller {
   @post('/register')
@@ -41,12 +37,14 @@ class Controller {
       res.json(e.message);
     }
   }
-  @use(log)
   @get('/all')
   async getAll(req: Request, res: Response): Promise<void> {
     try {
       const users = await User.find();
-      // res.send(JSON.stringify(users));
+      const [acc, ref] = generateTokens('thing');
+      res.cookie('acc', acc, cookieFor('access'));
+      res.json(users);
+      console.log(process.env.JWT_ACC_PRIV);
     } catch (e) {
       res.send(e.message);
     }

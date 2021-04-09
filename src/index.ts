@@ -8,9 +8,20 @@ import './controller';
 const app: Express = express();
 app.use(express.json());
 app.use(helmet());
-app.use(cors());
+app.use(
+  cors({
+    origin: '*',
+    credentials: true,
+    optionsSuccessStatus: 200,
+  })
+);
 import { router } from './controller/decorators';
 app.use(router);
+
+if (!process.env.DEBUG) {
+  app.set('trust proxy', 1);
+}
+
 establishDbConnection();
 
 const PORT = process.env.PORT || 4000;

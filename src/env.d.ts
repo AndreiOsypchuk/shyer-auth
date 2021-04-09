@@ -6,5 +6,7 @@ declare namespace NodeJS {
     EMAIL: string;
     PASSWORD: string;
     SALT: string;
+    JWT_ACC: string;
+    JWT_REF: string;
   }
 }
