@@ -44,7 +44,6 @@ class Controller {
       const [acc, ref] = generateTokens('thing');
       res.cookie('acc', acc, cookieFor('access'));
       res.json(users);
-      console.log(process.env.JWT_ACC_PRIV);
     } catch (e) {
       res.send(e.message);
     }
