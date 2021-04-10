@@ -26,6 +26,8 @@ type UserSchema = {
 userSchema.virtual('info').get(function getUserInfo(this: UserSchema) {
   return {
     name: `${this.firstName} ${this.lastName}`,
+    verified: this.verified,
+    createdAt: this.createdAt,
   };
 });
 

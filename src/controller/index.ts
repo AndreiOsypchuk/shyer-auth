@@ -6,6 +6,8 @@ import { regBody, logBody } from './middleware';
 import { encrypt } from './utils';
 import { cookieFor } from './utils/cookieconf';
 import { generateTokens } from './utils/authTokens';
+import { tokenStore } from '../redisconfig';
+
 @withRouter
 class Controller {
   @post('/register')
@@ -15,10 +17,14 @@ class Controller {
       const { firstName, lastName, email, password }: regBody = req.body;
       const hash = await encrypt(password);
       const newUser = new User({ firstName, lastName, email, password: hash });
-      newUser.save((e: any) => {
+      newUser.save(async (e: any) => {
         if (e) {
           res.status(400).json({ message: e.message });
         } else {
+          const [acc, ref] = generateTokens(newUser._id);
+          await tokenStore.setToken(newUser._id, ref);
+          res.cookie('acc', acc, cookieFor('access'));
+          res.cookie('ref', ref, cookieFor('refresh'));
           res.send(newUser.info);
         }
       });
@@ -43,6 +49,9 @@ class Controller {
       const users = await User.find();
       const [acc, ref] = generateTokens('thing');
       res.cookie('acc', acc, cookieFor('access'));
+      // await keyStore.setToken('fleeb', JSON.stringify(Math.random() * 10));
+      const arr3 = await tokenStore.getAll('fleeb');
+      console.log(arr3);
       res.json(users);
     } catch (e) {
       res.send(e.message);
