@@ -31,6 +31,9 @@ class TokenStore {
     const arr = await this.redis.lrange(key, 0, -1);
     return arr;
   }
+  public async flushAll(): Promise<void> {
+    await this.redis.flushall();
+  }
 }
 
 export const tokenStore = new TokenStore();

@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import { withRouter, get, post, use } from './decorators';
 import { User } from '../dbconfig/user.schema';
 import { validate } from './decorators/validate';

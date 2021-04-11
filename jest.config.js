@@ -1,4 +1,6 @@
 module.exports = {
+  testEnvironment: 'node',
+  setupFiles: ['dotenv/config'],
   roots: ['<rootDir>/src'],
   testMatch: [
     '**/__tests__/**/*.+(ts|tsx|js)',
